@@ -295,3 +295,18 @@ export function activateMockSubscriptionFromQuote(input: {
   };
   return id;
 }
+
+
+/* ------------------------------------------------------------------ */
+/* Persistence seam (frontend-only local backup/restore).             */
+/* The browser is the database: snapshots are written to IndexedDB.   */
+/* ------------------------------------------------------------------ */
+
+export function __serialize(): unknown {
+  return subscriptions;
+}
+
+export function __restore(snapshot: unknown): void {
+  if (!snapshot || typeof snapshot !== "object") return;
+  subscriptions = snapshot as unknown as typeof subscriptions;
+}

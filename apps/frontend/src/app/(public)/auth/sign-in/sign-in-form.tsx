@@ -4,7 +4,6 @@ import { routes } from "@/lib/routes";
 
 import { normalizeApiError } from "@/api/errors";
 import { resendVerification, signIn } from "@/api/services/auth";
-import { MockHint } from "@/components/layout/mock-hint";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
@@ -114,19 +113,6 @@ export function SignInForm({
         </Alert>
       ) : null}
 
-      <MockHint>
-        Sign in as <code className="font-mono">owner@demo.fluxeaze.test</code>{" "}
-        (any password; 4 mock organizations: owner, GM, branch manager and a
-        fresh empty org). For the student/parent area use{" "}
-        <code className="font-mono">guardian@demo.fluxeaze.test</code>; for the
-        platform-admin area use{" "}
-        <code className="font-mono">admin@fluxeaze.test</code>.
-        Also try{" "}
-        <code className="font-mono">noorg@fluxeaze.test</code> (no
-        organizations yet),{" "}
-        <code className="font-mono">locked@fluxeaze.test</code> and{" "}
-        <code className="font-mono">unverified@fluxeaze.test</code>.
-      </MockHint>
 
       {errorInfo ? (
         <Alert variant="error" title={errorInfo.friendlyTitle} requestId={errorInfo.requestId}>

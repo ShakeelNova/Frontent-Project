@@ -533,3 +533,16 @@ export const mockPortalApi = {
     };
   },
 };
+
+
+/* Persistence seam */
+export function __serialize(): unknown {
+  return { orgs, branches };
+}
+
+export function __restore(snapshot: unknown): void {
+  if (!snapshot || typeof snapshot !== "object") return;
+  const value = snapshot as { orgs?: unknown; branches?: unknown };
+  if (Array.isArray(value.orgs)) orgs = value.orgs as unknown as typeof orgs;
+  if (Array.isArray(value.branches)) branches = value.branches as unknown as typeof branches;
+}

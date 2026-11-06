@@ -8,6 +8,8 @@ const configDir = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Keep the product surface clean: no dev route-info overlay / indicator.
+  devIndicators: false,
   turbopack: {
     // npm workspaces hoist node_modules (incl. `next`) to the repo root;
     // Turbopack must resolve from there, not from apps/frontend alone.

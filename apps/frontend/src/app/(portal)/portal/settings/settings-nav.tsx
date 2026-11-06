@@ -15,6 +15,7 @@ const ITEMS = [
   { label: "Roles & permissions", href: routes.portal.settingsRoles },
   { label: "Integrations", href: routes.portal.settingsIntegrations },
   { label: "Security", href: routes.portal.settingsSecurity },
+  { label: "Backup & restore", href: routes.portal.settingsBackup },
   { label: "Onboarding", href: routes.portal.settingsOnboarding },
 ];
 

@@ -60,6 +60,7 @@ export const routes = {
     settingsPreferences: "/portal/settings/preferences",
     settingsRoles: "/portal/settings/roles",
     settingsSecurity: "/portal/settings/security",
+    settingsBackup: "/portal/settings/backup",
     staff: "/portal/staff",
     staffMember: (staffId: string) => `/portal/staff/${staffId}` as const,
     students: "/portal/students",

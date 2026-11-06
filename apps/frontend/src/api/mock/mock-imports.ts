@@ -427,3 +427,16 @@ export const mockImportsApi = {
     return publicJob(job);
   },
 };
+
+
+/* Persistence seam */
+export function __serialize(): unknown {
+  return { jobs, seq };
+}
+
+export function __restore(snapshot: unknown): void {
+  if (!snapshot || typeof snapshot !== "object") return;
+  const value = snapshot as { jobs?: unknown; seq?: unknown };
+  if (Array.isArray(value.jobs)) jobs = value.jobs as typeof jobs;
+  if (typeof value.seq === "number") seq = value.seq;
+}

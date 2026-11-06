@@ -5,18 +5,22 @@ centres and technical/vocational institutes.
 
 > *Make work flow easier. Manage less. Accomplish more.*
 
-**Current status: Phases 1–8 complete — the MVP frontend is feature-complete**
+**Current status: Phases 1–9 complete — the MVP frontend is feature-complete**
 (all tenant modules, the student/parent area, tenant billing, and the
-platform-admin catalogue), wired through the typed service seam. The one
-outstanding item is the **canonical OpenAPI contract** itself: until the
-backend publishes it, the `contract` transport degrades honestly and all
+platform-admin catalogue), wired through the typed service seam. Phase 9 adds
+the **complete premium white redesign** (new Fluxeaze palette, Inter typography,
+collapsible sidebar, command palette, motion, 15+ new shared components (85 total)) and
+**browser-local persistence with JSON backup/restore**. No backend was added.
+The one outstanding item is the **canonical OpenAPI contract** itself: until
+the backend publishes it, the `contract` transport degrades honestly and all
 flows are exercised against the dev mock (CR-001…CR-010).
 
-> **Demo mode works out of the box.** With no backend URL configured, the app
-> automatically uses the deterministic in-memory mock and shows a visible
-> banner, so every screen is clickable in a fresh checkout or preview. Set
-> `NEXT_PUBLIC_API_BASE_URL` (and optionally `NEXT_PUBLIC_API_TRANSPORT=contract`)
-> to switch to the real API. See [Demo mode](#demo-mode-no-backend) below.
+> **Works out of the box.** With no backend URL configured, the app
+> automatically uses the deterministic in-memory mock, so every screen is
+> clickable in a fresh checkout or preview. The product UI does not expose
+> demo/backend messaging. Set `NEXT_PUBLIC_API_BASE_URL` (and optionally
+> `NEXT_PUBLIC_API_TRANSPORT=contract`) to switch to the real API. See
+> [Demo mode](#demo-mode-no-backend) below.
 > A full requirement-by-requirement review is in
 > [PROJECT_AUDIT.md](./PROJECT_AUDIT.md).
 Phase 1 scaffolded the monorepo + OpenAPI pipeline; Phase 2 added the
@@ -454,9 +458,41 @@ report; when the canonical contract lands, only the service adapters change.
   (**CR-010**) behind the same service seam; subscription DTOs contain
   no cost data by construction.
 
+## Design system — Premium White (Phase 9)
+
+The entire product now uses one premium, white-first design system:
+
+- **Palette:** primary purple `#705EFF`, secondary `#B26CFF`, cyan `#1DCED8`,
+  green `#55E07E`, pink `#FF6082`, cream `#FFF9D8`, light pink `#FFE4F6`;
+  white/neutral surfaces `#FFFFFF`, `#F8F9FC`, `#F3F4F8`; text `#17172B`,
+  secondary `#626579`, muted `#9296A8`; borders `#E9EAF1` / `#DFE1EB`.
+  **No orange anywhere.**
+- **Typography:** Inter Variable (bundled via `@fontsource-variable/inter`)
+  with a consistent type scale and balanced headings.
+- **Shared components:** `AppShell` (collapsible sidebar + sticky topbar +
+  command palette + mobile drawer), `PageHeader`, `StatCard`, `AreaChart`,
+  `BarChart`, `Donut`, `Sparkline`, `Tabs`, `Breadcrumbs`, `Pagination`,
+  `Drawer`, `Tooltip`, `Switch`, `SearchInput`, `FileUpload`, `Avatar`,
+  `Progress`, `ProfileMenu`, `NotificationMenu`, `CommandPalette`,
+  `Icon`/`BrandMark`, plus upgraded Button/Card/Badge/Input/Table/Dialog/
+  Toast/Alert/Skeleton/FormField/EmptyState/ErrorState/PageLoading.
+- **Motion:** `motion` (Framer Motion) with shared variants, page transitions,
+  staggered reveals, drawer/modal animations, and
+  `MotionConfig reducedMotion="user"`.
+- **Shells:** premium sidebar/topbar for the organization portal, student/parent
+  area and platform admin; split-screen auth; premium public header/footer and
+  landing page.
+- **Removed:** the dev/mock banner, demo hint boxes, the old dark app icon, the
+  Next.js dev route-info overlay (`devIndicators: false`), the admin warning
+  band, and the "not live features" marketing line.
+- **Local persistence:** IndexedDB (structured data) + localStorage (UI
+  preferences), auto-save every 2.5s and on tab hide, JSON backup download,
+  readable text summary, validated restore, reset, and a
+  `/portal/settings/backup` page.
+
 ## Tests
 
-- **Unit/component (Vitest, 157 tests):** Phases 1–7 coverage plus
+- **Unit/component (Vitest, 163 tests):** Phases 1–7 coverage plus
   Phase 8 — subscription snapshot/usage (live student counts, credits vs
   money, deferred resources), billing 403 for branch managers,
   platform-admin gate (401/403), published-only public projection, the
@@ -498,8 +534,9 @@ report; when the canonical contract lands, only the service adapters change.
 
 ## What comes next
 
-The MVP frontend is feature-complete. Remaining work is integration, not
-features (see [PROJECT_AUDIT.md](./PROJECT_AUDIT.md) for the full scorecard):
+The MVP frontend is feature-complete and fully redesigned. Remaining work is
+integration, not features (see [PROJECT_AUDIT.md](./PROJECT_AUDIT.md) for the
+full scorecard):
 
 1. **Publish the canonical `openapi.yaml`** (CR-001…CR-010 in
    [BACKEND_INTEGRATION_REPORT.md](./BACKEND_INTEGRATION_REPORT.md) list

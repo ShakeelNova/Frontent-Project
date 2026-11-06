@@ -14,7 +14,10 @@ export function Label({
   ...props
 }: LabelHTMLAttributes<HTMLLabelElement>) {
   return (
-    <label className={cn("text-sm font-medium text-text", className)} {...props} />
+    <label
+      className={cn("text-sm font-medium text-text-secondary", className)}
+      {...props}
+    />
   );
 }
 
@@ -86,12 +89,12 @@ export function FormField({
       </Label>
       {control}
       {description ? (
-        <p id={descriptionId} className="text-sm text-muted">
+        <p id={descriptionId} className="text-caption leading-relaxed text-faint">
           {description}
         </p>
       ) : null}
       {error ? (
-        <p id={errorId} role="alert" className="text-sm font-medium text-error">
+        <p id={errorId} role="alert" className="text-caption font-medium text-error">
           {error}
         </p>
       ) : null}

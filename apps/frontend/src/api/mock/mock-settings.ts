@@ -108,7 +108,7 @@ function makeRoles(): RolePermissions[] {
   ];
 }
 
-const rolesByOrg = new Map<string, RolePermissions[]>();
+let rolesByOrg = new Map<string, RolePermissions[]>();
 
 function rolesOf(orgId: string): RolePermissions[] {
   if (!rolesByOrg.has(orgId)) rolesByOrg.set(orgId, makeRoles());
@@ -281,3 +281,18 @@ export const mockSettingsApi = {
     ];
   },
 };
+
+
+/* Persistence seam */
+export function __serialize(): unknown {
+  return { rolesByOrg: Array.from(rolesByOrg.entries()), sessions };
+}
+
+export function __restore(snapshot: unknown): void {
+  if (!snapshot || typeof snapshot !== "object") return;
+  const value = snapshot as { rolesByOrg?: unknown; sessions?: unknown };
+  if (Array.isArray(value.rolesByOrg)) {
+    rolesByOrg = new Map(value.rolesByOrg as Array<[string, RolePermissions[]]>);
+  }
+  if (Array.isArray(value.sessions)) sessions = value.sessions as typeof sessions;
+}

@@ -1062,3 +1062,18 @@ export function getMockPrograms(orgId: string): { id: string; name: string }[] {
 export function getMockClassTimetable(orgId: string, classId: string) {
   return structuredClone(stateOf(orgId).timetable[classId] ?? []);
 }
+
+
+/* ------------------------------------------------------------------ */
+/* Persistence seam (frontend-only local backup/restore).             */
+/* The browser is the database: snapshots are written to IndexedDB.   */
+/* ------------------------------------------------------------------ */
+
+export function __serialize(): unknown {
+  return school;
+}
+
+export function __restore(snapshot: unknown): void {
+  if (!snapshot || typeof snapshot !== "object") return;
+  school = snapshot as unknown as typeof school;
+}

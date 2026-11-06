@@ -571,3 +571,18 @@ export function createMockVoucherForStudent(
   });
   return true;
 }
+
+
+/* ------------------------------------------------------------------ */
+/* Persistence seam (frontend-only local backup/restore).             */
+/* The browser is the database: snapshots are written to IndexedDB.   */
+/* ------------------------------------------------------------------ */
+
+export function __serialize(): unknown {
+  return fees;
+}
+
+export function __restore(snapshot: unknown): void {
+  if (!snapshot || typeof snapshot !== "object") return;
+  fees = snapshot as unknown as typeof fees;
+}

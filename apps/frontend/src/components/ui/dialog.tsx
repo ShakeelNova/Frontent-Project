@@ -116,7 +116,7 @@ export function Dialog({
   return createPortal(
     <div
       data-testid="dialog-backdrop"
-      className="fixed inset-0 z-50 flex items-end justify-center bg-overlay p-4 sm:items-center"
+      className="fixed inset-0 z-50 flex animate-fade-in items-end justify-center bg-overlay p-4 sm:items-center"
       onMouseDown={(event) => {
         if (closeOnBackdropClick && event.target === event.currentTarget) {
           onClose();
@@ -131,11 +131,11 @@ export function Dialog({
         aria-describedby={descriptionId}
         tabIndex={-1}
         className={cn(
-          "max-h-[90dvh] w-full max-w-lg overflow-y-auto rounded-lg border border-border bg-surface shadow-lg",
+          "max-h-[90dvh] w-full max-w-lg animate-scale-in overflow-y-auto rounded-2xl border border-border bg-surface shadow-xl",
           className,
         )}
       >
-        <div className="flex items-start justify-between gap-4 px-6 pt-5">
+        <div className="flex items-start justify-between gap-4 px-6 pt-6">
           <div>
             <h2 id={titleId} className="text-h4">
               {title}
@@ -150,16 +150,16 @@ export function Dialog({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-muted hover:bg-surface-raised hover:text-text"
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-faint transition-colors hover:bg-surface-raised hover:text-text"
           >
             <svg viewBox="0 0 20 20" className="h-5 w-5" aria-hidden="true" fill="currentColor">
               <path d="M6.3 5.2 10 8.9l3.7-3.7 1.1 1.1L11.1 10l3.7 3.7-1.1 1.1L10 11.1l-3.7 3.7-1.1-1.1 3.7-3.7-3.7-3.7 1.1-1.1z" />
             </svg>
           </button>
         </div>
-        {children ? <div className="px-6 py-4">{children}</div> : null}
+        {children ? <div className="px-6 py-5">{children}</div> : null}
         {footer ? (
-          <div className="flex flex-wrap justify-end gap-3 border-t border-border px-6 py-4">
+          <div className="flex flex-wrap justify-end gap-3 border-t border-border bg-surface-raised/40 px-6 py-4">
             {footer}
           </div>
         ) : null}

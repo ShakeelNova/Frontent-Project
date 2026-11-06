@@ -3,15 +3,13 @@
 import { routes } from "@/lib/routes";
 
 import { queryKeys } from "@/api/query-keys";
-
 import { getMyStudents, type LinkedStudent } from "@/api/services/student-portal";
+import { AppShell } from "@/components/layout/app-shell";
 import { ErrorState } from "@/components/feedback/error-state";
 import { PageLoading } from "@/components/feedback/page-loading";
-import { ThemeToggle } from "@/components/theme/theme";
-import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/ui/icon";
 import { Select } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -29,18 +27,46 @@ export function useStudentPortal(): StudentPortalContext {
 }
 
 const NAV = [
-  { href: routes.student.root, label: "Home" },
-  { href: routes.student.attendance(), label: "Attendance" },
-  { href: routes.student.timetable(), label: "Timetable" },
-  { href: routes.student.fees(), label: "Fees" },
-  { href: routes.student.notices(), label: "Notices" },
-  { href: routes.student.results(), label: "Results" },
+  { href: routes.student.root, label: "Home", icon: "dashboard" as const },
+  { href: routes.student.attendance(), label: "Attendance", icon: "attendance" as const },
+  { href: routes.student.timetable(), label: "Timetable", icon: "calendar" as const },
+  { href: routes.student.fees(), label: "Fees", icon: "wallet" as const },
+  { href: routes.student.notices(), label: "Notices", icon: "bell" as const },
+  { href: routes.student.results(), label: "Results", icon: "chart" as const },
 ];
 
+function Centered({
+  title,
+  description,
+  action,
+  loading,
+}: {
+  title: string;
+  description: string;
+  action?: ReactNode;
+  loading?: boolean;
+}) {
+  return (
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-bg px-4 py-16">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-8 text-center shadow-sm">
+        <BrandMark className="mx-auto h-12 w-12" />
+        <h1 className="mt-5 text-h4 font-semibold tracking-[-0.02em]">{title}</h1>
+        <p className="mt-2 text-sm leading-relaxed text-muted">{description}</p>
+        {loading ? (
+          <div className="mt-5 flex justify-center">
+            <PageLoading label="Loading…" />
+          </div>
+        ) : null}
+        {action ? <div className="mt-5 flex justify-center">{action}</div> : null}
+      </div>
+    </div>
+  );
+}
+
 /**
- * Student/parent shell (Phase 7). Strictly limited: linked students come
- * from the backend session; staff users and signed-out visitors never
- * see student data here (and the API enforces the same with 403s).
+ * Student/parent experience — deliberately separate and simplified.
+ * Only the signed-in user's LINKED students render here (backend-resolved
+ * from the session); no management navigation or admin data, ever.
  */
 export function StudentShell({ children }: { children: ReactNode }) {
   const { user, isLoading, signOut, isSigningOut } = useAuth();
@@ -58,164 +84,115 @@ export function StudentShell({ children }: { children: ReactNode }) {
   const student =
     students.find((s) => s.id === studentParam) ?? students[0] ?? null;
 
-  const withStudent = (href: string) =>
-    student ? `${href}?student=${student.id}` : href;
+  const handleSignOut = async () => {
+    await signOut().catch(() => undefined);
+    router.push(routes.auth.signIn);
+  };
 
-  const frame = (content: ReactNode, showNav = false) => (
-    <div className="flex min-h-dvh flex-col">
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-surface focus:px-4 focus:py-2 focus:text-text"
-      >
-        Skip to main content
-      </a>
-      <header className="border-b border-border bg-surface">
-        <div className="mx-auto flex min-h-14 w-full max-w-4xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-2 sm:px-6">
-          <p className="text-base font-bold tracking-tight">
-            Fluxeaze <span className="font-medium text-muted">· Student &amp; Parent</span>
-          </p>
-          {showNav ? (
-            <nav aria-label="Student" className="flex flex-wrap items-center gap-1 text-sm">
-              {NAV.map((item) => {
-                const active =
-                  item.href === "/student"
-                    ? pathname === item.href
-                    : pathname.startsWith(item.href);
-                return (
-                  <Link
-                    key={item.href}
-                    href={withStudent(item.href)}
-                    aria-current={active ? "page" : undefined}
-                    className={cn(
-                      "rounded-md px-2.5 py-1.5 font-medium",
-                      active
-                        ? "bg-primary text-primary-foreground"
-                        : "text-text hover:bg-surface-raised",
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          ) : null}
-          <div className="ml-auto flex items-center gap-2">
-            <ThemeToggle />
-            {user ? (
-              <Button
-                variant="subtle"
-                isLoading={isSigningOut}
-                onClick={async () => {
-                  await signOut();
-                  router.push(routes.auth.signIn);
-                }}
-              >
-                Sign out
-              </Button>
-            ) : null}
-          </div>
-        </div>
-        {showNav && student ? (
-          <div className="border-t border-border">
-            <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center gap-3 px-4 py-2 text-sm sm:px-6">
-              <span className="text-muted">
-                {student.organizationName} · {student.branchName}
-              </span>
-              {students.length > 1 ? (
-                <label className="flex items-center gap-2">
-                  <span className="font-medium">Student</span>
-                  <Select
-                    aria-label="Switch student"
-                    value={student.id}
-                    onChange={(e) =>
-                      router.replace(`${pathname}?student=${e.target.value}`, {
-                        scroll: false,
-                      })
-                    }
-                    className="w-56"
-                  >
-                    {students.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.fullName} ({s.studentCode})
-                      </option>
-                    ))}
-                  </Select>
-                </label>
-              ) : (
-                <span className="font-medium">
-                  {student.fullName} ({student.studentCode})
-                </span>
-              )}
-            </div>
-          </div>
-        ) : null}
-      </header>
-      <main id="main-content" className="mx-auto w-full max-w-4xl flex-1 px-4 py-6 sm:px-6">
-        {content}
-      </main>
-    </div>
-  );
-
-  if (isLoading) return frame(<PageLoading label="Loading…" />);
+  if (isLoading) {
+    return <Centered loading title="Loading your area" description="Checking your session…" />;
+  }
   if (!user) {
-    return frame(
-      <div className="mx-auto max-w-md py-10 text-center">
-        <h1 className="text-h3">Sign in to view your student area</h1>
-        <p className="mt-2 text-muted">
-          Students and guardians sign in with the account your school
-          invited. You&apos;ll only ever see your own linked student(s).
-        </p>
-        <p className="mt-4">
+    return (
+      <Centered
+        title="Sign in to view your student area"
+        description="Students and guardians sign in with the account your school invited. You'll only ever see your own linked student(s)."
+        action={
           <Link
             href={routes.auth.signInNext("%2Fstudent")}
-            className="font-medium text-primary underline"
+            className="inline-flex min-h-10 items-center rounded-xl bg-primary px-5 text-sm font-medium text-white shadow-glow transition-colors hover:bg-primary-hover"
           >
-            Sign in →
+            Sign in
           </Link>
-        </p>
-      </div>,
+        }
+      />
     );
   }
   if (user.kind === "staff") {
-    return frame(
-      <div className="mx-auto max-w-md py-10 text-center">
-        <h1 className="text-h3">This area is for students &amp; parents</h1>
-        <p className="mt-2 text-muted">
-          You&apos;re signed in with a staff account. Your management tools
-          are in the organization portal.
-        </p>
-        <p className="mt-4">
-          <Link href={routes.portal.root} className="font-medium text-primary underline">
-            Go to the organization portal →
+    return (
+      <Centered
+        title="This area is for students & parents"
+        description="You're signed in with a staff account. Your management tools are in the organization portal."
+        action={
+          <Link
+            href={routes.portal.root}
+            className="inline-flex min-h-10 items-center rounded-xl bg-primary px-5 text-sm font-medium text-white shadow-glow transition-colors hover:bg-primary-hover"
+          >
+            Go to the organization portal
           </Link>
-        </p>
-      </div>,
+        }
+      />
     );
   }
-  if (studentsQuery.isPending) return frame(<PageLoading label="Loading your students…" />);
+  if (studentsQuery.isPending) {
+    return <Centered loading title="Loading your students" description="Fetching your linked student records…" />;
+  }
   if (studentsQuery.isError) {
-    return frame(
-      <ErrorState
-        error={studentsQuery.error}
-        onRetry={() => void studentsQuery.refetch()}
-      />,
+    return (
+      <div className="mx-auto w-full max-w-3xl px-4 py-10">
+        <ErrorState error={studentsQuery.error} onRetry={() => void studentsQuery.refetch()} />
+      </div>
     );
   }
   if (students.length === 0) {
-    return frame(
-      <div className="mx-auto max-w-md py-10 text-center">
-        <h1 className="text-h3">No students linked yet</h1>
-        <p className="mt-2 text-muted">
-          Your account isn&apos;t linked to a student yet. Ask your school
-          office to link your email as a guardian — your student&apos;s
-          information will appear here automatically.
-        </p>
-      </div>,
+    return (
+      <Centered
+        title="No students linked yet"
+        description="Your account isn't linked to a student yet. Ask your school office to link your email as a guardian — your student's information will appear here automatically."
+      />
     );
   }
 
-  return frame(
-    <Ctx.Provider value={{ students, student }}>{children}</Ctx.Provider>,
-    true,
+  const studentSelector = students.length > 1 ? (
+    <label className="flex min-w-0 items-center gap-2">
+      <span className="sr-only">Switch student</span>
+      <Select
+        aria-label="Switch student"
+        value={student?.id ?? ""}
+        onChange={(event) =>
+          router.replace(`${pathname}?student=${event.target.value}`, { scroll: false })
+        }
+        className="min-h-9 w-full max-w-56 py-1.5 text-sm"
+      >
+        {students.map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.fullName} ({s.studentCode})
+          </option>
+        ))}
+      </Select>
+    </label>
+  ) : (
+    <p className="truncate text-sm font-medium text-text">
+      {student?.fullName} <span className="text-faint">({student?.studentCode})</span>
+    </p>
+  );
+
+  return (
+    <AppShell
+      sections={[
+        {
+          heading: "My area",
+          items: NAV.map((item) => ({ label: item.label, href: item.href, icon: item.icon })),
+        },
+      ]}
+      user={{ name: user.fullName, email: user.email, role: "Student & parent" }}
+      onSignOut={handleSignOut}
+      isSigningOut={isSigningOut}
+      topbarLeading={studentSelector}
+      sidebarContext={
+        student ? (
+          <div className="rounded-xl border border-border bg-surface-raised px-3 py-2.5">
+            <p className="truncate text-sm font-semibold text-text">{student.fullName}</p>
+            <p className="truncate text-caption text-faint">
+              {student.organizationName} · {student.branchName}
+            </p>
+            <p className="mt-1 text-caption font-medium text-primary">{student.studentCode}</p>
+          </div>
+        ) : null
+      }
+      brandSubtitle="Student & Parent"
+    >
+      <Ctx.Provider value={{ students, student }}>{children}</Ctx.Provider>
+    </AppShell>
   );
 }

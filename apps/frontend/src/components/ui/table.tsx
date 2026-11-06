@@ -15,15 +15,15 @@ export function Table({
 }: HTMLAttributes<HTMLTableElement> & { containerClassName?: string }) {
   return (
     <div
-      className={cn("w-full overflow-x-auto rounded-lg border border-border", containerClassName)}
+      className={cn(
+        "w-full overflow-x-auto rounded-xl border border-border bg-surface",
+        containerClassName,
+      )}
       tabIndex={ariaLabel ? 0 : undefined}
       role={ariaLabel ? "region" : undefined}
       aria-label={ariaLabel}
     >
-      <table
-        className={cn("w-full min-w-full border-collapse text-sm", className)}
-        {...props}
-      />
+      <table className={cn("w-full min-w-full border-collapse text-sm", className)} {...props} />
     </div>
   );
 }
@@ -60,7 +60,10 @@ export function TableRow({
 }: HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={cn("border-b border-border last:border-b-0", className)}
+      className={cn(
+        "border-b border-border transition-colors last:border-b-0 hover:bg-surface-raised/60",
+        className,
+      )}
       {...props}
     />
   );
@@ -76,7 +79,7 @@ export function TableHead({
     <th
       scope={scope}
       className={cn(
-        "px-4 py-3 text-left align-middle font-semibold text-text whitespace-nowrap",
+        "whitespace-nowrap px-4 py-3 text-left align-middle text-caption font-semibold uppercase tracking-[0.06em] text-faint",
         className,
       )}
       {...props}
@@ -89,7 +92,7 @@ export function TableCell({
   ...props
 }: TdHTMLAttributes<HTMLTableCellElement>) {
   return (
-    <td className={cn("px-4 py-3 align-middle text-text", className)} {...props} />
+    <td className={cn("px-4 py-3.5 align-middle text-text-secondary", className)} {...props} />
   );
 }
 

@@ -209,3 +209,13 @@ function assertUsableToken(token: string): void {
     mockError(400, "TOKEN_INVALID", "Token invalid.");
   }
 }
+
+
+/* Persistence seam: the signed-in demo session survives reloads. */
+export function __serialize(): unknown {
+  return sessionUser;
+}
+
+export function __restore(snapshot: unknown): void {
+  sessionUser = (snapshot ?? null) as AuthUser | null;
+}
