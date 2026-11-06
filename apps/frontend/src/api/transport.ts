@@ -17,8 +17,27 @@
 
 export type ApiTransport = "contract" | "mock";
 
+/**
+ * Resolves the active transport.
+ *
+ * - An explicit `NEXT_PUBLIC_API_TRANSPORT` always wins (`mock` or
+ *   `contract`), so CI, E2E and backend-integration work stay deterministic.
+ * - With no explicit choice, the app selects `contract` when a backend base
+ *   URL is configured, and falls back to the in-memory demo mock when it is
+ *   not. That fallback is what makes a fresh checkout / preview usable
+ *   without a backend; the visible banner and MockHint boxes make the mode
+ *   unmistakable, and any real deployment sets `NEXT_PUBLIC_API_BASE_URL`
+ *   (and therefore gets `contract`).
+ */
 export function getApiTransport(): ApiTransport {
-  return process.env.NEXT_PUBLIC_API_TRANSPORT === "mock" ? "mock" : "contract";
+  const configured = process.env.NEXT_PUBLIC_API_TRANSPORT?.trim().toLowerCase();
+  if (configured === "mock") return "mock";
+  if (configured === "contract") return "contract";
+
+  const hasBackendBaseUrl = Boolean(
+    process.env.NEXT_PUBLIC_API_BASE_URL?.trim(),
+  );
+  return hasBackendBaseUrl ? "contract" : "mock";
 }
 
 export function isMockTransport(): boolean {

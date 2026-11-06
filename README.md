@@ -11,6 +11,14 @@ platform-admin catalogue), wired through the typed service seam. The one
 outstanding item is the **canonical OpenAPI contract** itself: until the
 backend publishes it, the `contract` transport degrades honestly and all
 flows are exercised against the dev mock (CR-001…CR-010).
+
+> **Demo mode works out of the box.** With no backend URL configured, the app
+> automatically uses the deterministic in-memory mock and shows a visible
+> banner, so every screen is clickable in a fresh checkout or preview. Set
+> `NEXT_PUBLIC_API_BASE_URL` (and optionally `NEXT_PUBLIC_API_TRANSPORT=contract`)
+> to switch to the real API. See [Demo mode](#demo-mode-no-backend) below.
+> A full requirement-by-requirement review is in
+> [PROJECT_AUDIT.md](./PROJECT_AUDIT.md).
 Phase 1 scaffolded the monorepo + OpenAPI pipeline; Phase 2 added the
 design system, layout shells and route groups (showcase at `/design-system`,
 see [apps/frontend/docs/design-system.md](./apps/frontend/docs/design-system.md)).
@@ -70,6 +78,8 @@ surface; nothing is a labeled stub anymore.
 ├── contracts/
 │   └── CONTRACT_VERSION.txt # Consumed contract version + SHA-256
 ├── BACKEND_INTEGRATION_REPORT.md
+├── PROJECT_AUDIT.md         # Full project review: inventory, scorecard, gaps
+├── .github/workflows/ci.yml # Typecheck · lint · test · contract · build
 └── package.json             # npm-workspaces root (delegates all scripts)
 ```
 
@@ -93,13 +103,37 @@ the backend REST API.
 # 1. Install dependencies (npm workspaces — run from repo root)
 npm install
 
-# 2. Configure environment (frontend app dir)
+# 2. Run immediately in demo mode (no backend needed)
+npm run dev
+# open http://localhost:3000 — sign in with owner@demo.fluxeaze.test
+# (any password). The banner confirms demo mode.
+
+# 3. For real API work, configure the backend URL
 cp apps/frontend/.env.example apps/frontend/.env.local
 # .env.local must define: NEXT_PUBLIC_API_BASE_URL=http://localhost:4000/api/v1
 
-# 3. (First time only) install the Playwright browser for E2E
+# 4. (First time only) install the Playwright browser for E2E
 cd apps/frontend && npx playwright install chromium && cd ../..
 ```
+
+### Demo mode (no backend)
+
+If `NEXT_PUBLIC_API_BASE_URL` is not set and `NEXT_PUBLIC_API_TRANSPORT` is
+not set, the app selects the **mock transport** automatically. This is a
+deliberate demo fallback so a fresh clone, a preview or a design review is
+fully usable without a server. It is always announced by the top banner and
+the amber `MockHint` boxes, and it is never used silently in production: a
+real deployment sets the backend URL (which selects `contract`).
+
+Demo accounts (any password with 8+ characters):
+
+| Account | Area |
+|---|---|
+| `owner@demo.fluxeaze.test` | Staff owner — 4 organizations (owner, GM, branch manager, empty org) |
+| `guardian@demo.fluxeaze.test` | Student/parent area — 2 linked students |
+| `admin@fluxeaze.test` | Platform-admin area — plans, rates, quotes, audit |
+| `noorg@fluxeaze.test` | Authenticated user with no organization |
+| `locked@fluxeaze.test` / `unverified@fluxeaze.test` | Auth error scenarios |
 
 Environment rules:
 
@@ -204,7 +238,7 @@ frontend **never edits it** and **never invents endpoints or response shapes**.
 
 - **Landing `/`** — honest marketing (features + trust/security + CTAs);
   deferred integrations (WhatsApp, video, gateways, payroll) are explicitly
-  labelled “not live features Em-dash”.
+  labelled “not live features —”.
 - **Pricing `/pricing`** — published plans via the plans service; prices are
   API minor units formatted with each plan's currency (`src/lib/money.ts`);
   skeleton / empty (“Plans are being prepared…” — never fabricated) / error+retry.
@@ -224,7 +258,7 @@ frontend **never edits it** and **never invents endpoints or response shapes**.
 
 UI code only calls `apps/frontend/src/api/services/*`. `NEXT_PUBLIC_API_TRANSPORT`
 selects the transport: **`contract`** (default — generated client; pre-contract
-Em-dash the UI honestly reports features unavailable / pricing empty) or
+— the UI honestly reports features unavailable / pricing empty) or
 **`mock`** (deterministic in-memory fixtures for **local dev/test only**, with
 a visible banner + scenario hints; **never** set it in production). Assumed
 endpoints + error codes are logged as CR-001…CR-010 in the integration
@@ -422,7 +456,7 @@ report; when the canonical contract lands, only the service adapters change.
 
 ## Tests
 
-- **Unit/component (Vitest, 150 tests):** Phases 1–7 coverage plus
+- **Unit/component (Vitest, 157 tests):** Phases 1–7 coverage plus
   Phase 8 — subscription snapshot/usage (live student counts, credits vs
   money, deferred resources), billing 403 for branch managers,
   platform-admin gate (401/403), published-only public projection, the
@@ -465,7 +499,7 @@ report; when the canonical contract lands, only the service adapters change.
 ## What comes next
 
 The MVP frontend is feature-complete. Remaining work is integration, not
-features:
+features (see [PROJECT_AUDIT.md](./PROJECT_AUDIT.md) for the full scorecard):
 
 1. **Publish the canonical `openapi.yaml`** (CR-001…CR-010 in
    [BACKEND_INTEGRATION_REPORT.md](./BACKEND_INTEGRATION_REPORT.md) list
