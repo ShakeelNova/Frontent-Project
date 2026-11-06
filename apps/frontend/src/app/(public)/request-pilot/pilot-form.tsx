@@ -99,7 +99,7 @@ export function PilotForm() {
           <p className="text-muted">
             The Fluxeaze team will follow up by email with next steps for your
             pilot. We read every request; there&apos;s nothing else you need to do
-            Em-dash.
+            —.
           </p>
           {mutation.data.reference ? (
             <p className="text-sm text-muted">

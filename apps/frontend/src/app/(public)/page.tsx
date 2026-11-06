@@ -145,7 +145,7 @@ export default function LandingPage() {
           Honest roadmap note: Fluxeaze is in active, phased development with
           pilot institutes. Integrations such as WhatsApp messaging, online
           payment gateways, live video classes and payroll are planned for
-          later phases and are not live features Em-dash.
+          later phases and are not live features —.
         </p>
       </section>
 

@@ -179,7 +179,7 @@ export function InvitePanel() {
         <Alert variant="info" title="Your invitation is being reviewed">
           {invite.organizationName} needs to approve this invitation before you
           can set your password. We&apos;ll let you finish setup as soon as it&apos;s
-          approved — there&apos;s nothing you need to do Em-dash.
+          approved — there&apos;s nothing you need to do —.
         </Alert>
       </div>
     );

@@ -32,6 +32,6 @@ describe("LandingPage", () => {
     ]) {
       expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
     }
-    expect(screen.getByText(/not live features Em-dash/i)).toBeInTheDocument();
+    expect(screen.getByText(/not live features —/i)).toBeInTheDocument();
   });
 });

@@ -12,5 +12,5 @@ test("home page renders the Fluxeaze landing page", async ({ page }) => {
     }),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Request a pilot" }).first()).toBeVisible();
-  await expect(page.getByText(/not live features Em-dash/i)).toBeVisible();
+  await expect(page.getByText(/not live features —/i)).toBeVisible();
 });
