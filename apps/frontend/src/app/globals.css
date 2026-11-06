@@ -1,0 +1,236 @@
+@import "tailwindcss";
+
+/*
+ * Fluxeaze Design System — Phase 2 foundation (see docs/design-system.md).
+ *
+ * Single source of truth for design tokens. Components must use these
+ * variables (via Tailwind utilities mapped below) — never raw hex/px values.
+ * Light theme is the default; [data-theme="dark"] overrides color tokens.
+ */
+
+:root {
+  /* Colors — light */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #0f766e;
+  --color-secondary-hover: #115e59;
+  --color-secondary-foreground: #ffffff;
+  --color-border: #d9e2ec;
+  --color-text: #0f172a;
+  --color-muted: #475569;
+  --color-error: #b91c1c;
+  --color-error-surface: #fef2f2;
+  --color-warning: #b45309;
+  --color-warning-surface: #fffbeb;
+  --color-success: #15803d;
+  --color-success-surface: #f0fdf4;
+  --color-info: #0369a1;
+  --color-info-surface: #f0f9ff;
+  --color-overlay: rgb(15 23 42 / 0.55);
+
+  /* Spacing scale (mirrors Tailwind's 0.25rem base step) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Border radii */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+  --shadow-md: 0 4px 12px rgb(15 23 42 / 0.1);
+  --shadow-lg: 0 12px 32px rgb(15 23 42 / 0.16);
+
+  /* Focus */
+  --focus-ring: #1d4ed8;
+
+  /* Typography scale */
+  --font-size-h1: 2.25rem;
+  --line-height-h1: 2.5rem;
+  --font-size-h2: 1.875rem;
+  --line-height-h2: 2.25rem;
+  --font-size-h3: 1.5rem;
+  --line-height-h3: 2rem;
+  --font-size-h4: 1.25rem;
+  --line-height-h4: 1.75rem;
+  --font-size-h5: 1.125rem;
+  --line-height-h5: 1.625rem;
+  --font-size-h6: 1rem;
+  --line-height-h6: 1.5rem;
+  --font-size-body: 1rem;
+  --line-height-body: 1.5rem;
+  --font-size-sm: 0.875rem;
+  --line-height-sm: 1.25rem;
+  --font-size-caption: 0.75rem;
+  --line-height-caption: 1rem;
+}
+
+[data-theme="dark"] {
+  --color-bg: #0b1220;
+  --color-surface: #111a2e;
+  --color-surface-raised: #17233d;
+  --color-primary: #60a5fa;
+  --color-primary-hover: #93c5fd;
+  --color-primary-foreground: #0b1220;
+  --color-secondary: #2dd4bf;
+  --color-secondary-hover: #5eead4;
+  --color-secondary-foreground: #0b1220;
+  --color-border: #263449;
+  --color-text: #e6edf7;
+  --color-muted: #9fb0c7;
+  --color-error: #f87171;
+  --color-error-surface: #2a1215;
+  --color-warning: #fbbf24;
+  --color-warning-surface: #2a1f08;
+  --color-success: #4ade80;
+  --color-success-surface: #0c2417;
+  --color-info: #38bdf8;
+  --color-info-surface: #0a1f2e;
+  --color-overlay: rgb(2 6 17 / 0.7);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
+  --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.55);
+  --focus-ring: #60a5fa;
+}
+
+/*
+ * Tailwind CSS 4 theme mapping — utilities (bg-primary, rounded-md,
+ * shadow-md, text-h1, p-4, …) resolve through the CSS variables above,
+ * so theme switching only swaps variable values.
+ */
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-text-muted: var(--color-muted); /* Phase 1 alias */
+  --color-error: var(--color-error);
+  --color-error-surface: var(--color-error-surface);
+  --color-warning: var(--color-warning);
+  --color-warning-surface: var(--color-warning-surface);
+  --color-success: var(--color-success);
+  --color-success-surface: var(--color-success-surface);
+  --color-info: var(--color-info);
+  --color-info-surface: var(--color-info-surface);
+  --color-overlay: var(--color-overlay);
+
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-5: var(--space-5);
+  --spacing-6: var(--space-6);
+  --spacing-8: var(--space-8);
+  --spacing-10: var(--space-10);
+  --spacing-12: var(--space-12);
+  --spacing-16: var(--space-16);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-full: var(--radius-full);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --text-h1: var(--font-size-h1);
+  --text-h1--line-height: var(--line-height-h1);
+  --text-h2: var(--font-size-h2);
+  --text-h2--line-height: var(--line-height-h2);
+  --text-h3: var(--font-size-h3);
+  --text-h3--line-height: var(--line-height-h3);
+  --text-h4: var(--font-size-h4);
+  --text-h4--line-height: var(--line-height-h4);
+  --text-h5: var(--font-size-h5);
+  --text-h5--line-height: var(--line-height-h5);
+  --text-h6: var(--font-size-h6);
+  --text-h6--line-height: var(--line-height-h6);
+  --text-body: var(--font-size-body);
+  --text-body--line-height: var(--line-height-body);
+  --text-caption: var(--font-size-caption);
+  --text-caption--line-height: var(--line-height-caption);
+
+  --font-sans: ui-sans-system, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+  }
+
+  h1 {
+    font-size: var(--font-size-h1);
+    line-height: var(--line-height-h1);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-h2);
+    font-weight: 650;
+  }
+  h3 {
+    font-size: var(--font-size-h3);
+    line-height: var(--line-height-h3);
+    font-weight: 600;
+  }
+  h4 {
+    font-size: var(--font-size-h4);
+    line-height: var(--line-height-h4);
+    font-weight: 600;
+  }
+  h5 {
+    font-size: var(--font-size-h5);
+    line-height: var(--line-height-h5);
+    font-weight: 600;
+  }
+  h6 {
+    font-size: var(--font-size-h6);
+    line-height: var(--line-height-h6);
+    font-weight: 600;
+  }
+
+  /* Visible, consistent keyboard focus across the whole app. */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

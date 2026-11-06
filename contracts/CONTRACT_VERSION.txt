@@ -1,0 +1,25 @@
+Fluxeaze API Contract — consumed baseline record
+================================================
+
+Contract file:    packages/api-contract/openapi.yaml
+Contract version: 0.0.0-placeholder
+Status:           PLACEHOLDER — canonical contract NOT yet published.
+                  Declares no endpoints. API-dependent frontend work is
+                  blocked until the backend team publishes the baseline.
+SHA-256:          d6294db1e82df49b4062b67b12403f999e9fbeba8f92e73bd915dba41f1ba52f
+Recorded:         2026-10-25 (Phase 1 scaffolding)
+Generated client: apps/frontend/src/api/generated.ts (openapi-typescript)
+
+How to update when the contract changes
+---------------------------------------
+1. Replace packages/api-contract/openapi.yaml with the newly published
+   canonical spec (frontend never hand-edits the spec).
+2. Run:  npm run api:types
+3. Update "Contract version" above to the spec's info.version (or backend
+   commit/tag), and "SHA-256" to the output of:
+     sha256sum packages/api-contract/openapi.yaml
+   (macOS: shasum -a 256 packages/api-contract/openapi.yaml)
+4. Run:  npm run api:check && npm run typecheck
+   Fix type errors in frontend code — never edit generated.ts by hand.
+5. Commit openapi.yaml, src/api/generated.ts and this file together, and
+   note the bump in BACKEND_INTEGRATION_REPORT.md.

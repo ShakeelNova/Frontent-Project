@@ -1,0 +1,22 @@
+openapi: 3.1.0
+info:
+  title: Fluxeaze API
+  version: 0.0.0-placeholder
+  description: |
+    PLACEHOLDER — NOT the canonical Fluxeaze API contract.
+
+    This file exists only so the Phase 1 type-generation pipeline
+    (`npm run api:types` / `npm run api:check`) can be verified end-to-end
+    before the backend team publishes the canonical contract baseline.
+
+    It intentionally declares NO business endpoints and NO response shapes.
+    Do not build feature code against it. When the canonical contract is
+    published, replace this file wholesale, re-run `npm run api:types`,
+    update `contracts/CONTRACT_VERSION.txt`, and fix any resulting type
+    errors in the frontend. Never hand-edit generated output to work
+    around a contract mismatch — raise a contract change request instead
+    (see BACKEND_INTEGRATION_REPORT.md).
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Local backend (development only; runtime base URL comes from NEXT_PUBLIC_API_BASE_URL)
+paths: {}

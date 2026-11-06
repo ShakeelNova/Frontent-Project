@@ -1,0 +1,25 @@
+{
+  "name": "fluxeaze",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fluxeaze — multi-tenant Education Operations OS (monorepo root)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20 <26",
+    "npm": ">=11"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspace @fluxeaze/frontend",
+    "build": "npm run build --workspace @fluxeaze/frontend",
+    "start": "npm run start --workspace @fluxeaze/frontend",
+    "lint": "npm run lint --workspace @fluxeaze/frontend",
+    "typecheck": "npm run typecheck --workspace @fluxeaze/frontend",
+    "test": "npm run test --workspace @fluxeaze/frontend",
+    "e2e": "npm run e2e --workspace @fluxeaze/frontend",
+    "api:types": "npm run api:types --workspace @fluxeaze/frontend",
+    "api:check": "npm run api:check --workspace @fluxeaze/frontend"
+  }
+}
