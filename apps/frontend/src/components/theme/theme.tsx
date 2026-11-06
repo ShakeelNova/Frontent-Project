@@ -78,8 +78,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
-/** Pre-paint script (root layout): stored choice → OS preference → light. */
-export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem("${THEME_STORAGE_KEY}");if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme="light";}})();`;
+/** Pre-paint script (root layout): stored choice → light (white-first). */
+export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem("${THEME_STORAGE_KEY}");if(t!=="light"&&t!=="dark"){t="light";}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme="light";}})();`;
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { theme, toggleTheme } = useTheme();
@@ -92,8 +92,8 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       title={isDark ? "Switch to light theme" : "Switch to dark theme"}
       className={
-        "inline-flex h-9 w-9 items-center justify-center rounded-md border border-border " +
-        "bg-surface text-text hover:bg-surface-raised " +
+        "inline-flex h-9 w-9 items-center justify-center rounded-lg text-text-secondary transition-colors " +
+        "hover:bg-surface-raised hover:text-text focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-soft " +
         (className ?? "")
       }
     >

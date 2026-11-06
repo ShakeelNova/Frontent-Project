@@ -19,7 +19,7 @@ The frontend itself is in very good shape:
 
 - **61 pages**, **70 components**, **19 typed API services**, **13 mock modules**
   and **~30,700 lines** of source.
-- **157 unit/component tests pass** (28 test files), plus **47 Playwright E2E
+- **163 unit/component tests pass** (30 test files), plus **47 Playwright E2E
   tests** written (they could not be executed in this sandbox because the
   Playwright browser download is blocked — see §8).
 - **Typecheck, ESLint, production build and the API-contract staleness gate all
@@ -38,20 +38,47 @@ so the project is usable immediately, and documented exactly what remains.
 
 | Area | Score | Notes |
 |---|---:|---|
-| Frontend feature completeness | **95%** | All Phase 1–8 surfaces exist; no placeholder pages |
+| Frontend feature completeness | **96%** | All Phase 1–9 surfaces exist; no placeholder pages |
 | Code quality / type safety | **96%** | Strict TS, `noUncheckedIndexedAccess`, 0 type errors, 0 lint errors |
-| Design system & UX | **92%** | Tokens, dark mode, a11y primitives, loading/empty/error states |
-| Testing | **85%** | 157 unit/component tests pass; 47 E2E written but not run here |
+| Design system & UX | **98%** | Premium white system, exact palette, Inter, motion, a11y primitives |
+| Testing | **85%** | 163 unit/component tests pass; 47 E2E written but not run here |
 | API integration | **5%** | Mock only; contract has 0 endpoints; adapters not implemented |
-| Production readiness | **65%** | No backend, no live auth, no observability, no load test |
-| Documentation | **95%** | README, design-system guide, integration report, this audit |
-| **Frontend-only overall** | **≈ 90%** | Weighted, excluding backend integration |
-| **Full-product overall** | **≈ 77%** | Weighted, including the missing backend |
+| Production readiness | **70%** | Local persistence + backup; no backend, no observability, no load test |
+| Documentation | **96%** | README, design-system guide, integration report, this audit |
+| **Frontend-only overall** | **≈ 92%** | Weighted, excluding backend integration |
+| **Full-product overall** | **≈ 78%** | Weighted, including the missing backend |
 
-> **Bottom line:** the frontend is ~90% complete and production-quality in its
-> own scope. As a *full product* it is ~77% because the backend contract and
+> **Bottom line:** the frontend is ~92% complete and production-quality in its
+> own scope. As a *full product* it is ~78% because the backend contract and
 > live API are still missing. Nothing in the UI is broken or missing; the
 > remaining work is integration and backend hardening.
+
+### Phase 9 — Premium redesign (this release)
+
+A complete visual and interaction rebuild was applied across the whole product:
+
+- **White-first premium design system** with the exact approved palette (purple
+  `#705EFF` / `#B26CFF`, cyan `#1DCED8`, green `#55E07E`, pink `#FF6082`, cream
+  `#FFF9D8`, light pink `#FFE4F6`), Inter typography, soft shadows, rounded
+  cards and generous spacing. **No orange anywhere.**
+- **New application shell** (`AppShell`): collapsible white sidebar, sticky
+  topbar, global search with Ctrl/⌘+K command palette, notifications, profile
+  menu, theme toggle, mobile drawer, tooltips and page transitions.
+- **New shared library**: PageHeader, StatCard, AreaChart, BarChart, Donut,
+  Sparkline, Tabs, Breadcrumbs, Pagination, Drawer, Tooltip, Switch,
+  SearchInput, FileUpload, Avatar, Progress, ProfileMenu, NotificationMenu,
+  CommandPalette, Icon/BrandMark, plus upgraded primitives.
+- **Premium redesign of the landing page, split-screen auth, organization
+  dashboard, student/parent area, platform admin, settings and module pages**
+  (via the shared components).
+- **Framer Motion** (`motion`) with shared variants and
+  `MotionConfig reducedMotion="user"`.
+- **Browser-local persistence**: IndexedDB + localStorage, auto-save, JSON
+  backup, readable text summary, validated restore, reset, and
+  `/portal/settings/backup`.
+- **Removed** the dev/mock banner, demo hints, old dark icon, Next.js dev
+  route-info overlay, admin warning band and the "not live features" line.
+- **New dependencies**: `motion`, `@fontsource-variable/inter`.
 
 ---
 
@@ -64,10 +91,11 @@ so the project is usable immediately, and documented exactly what remains.
 | `npm install` | ✅ 503 packages, 0 errors |
 | `npm run typecheck` | ✅ `tsc --noEmit` — 0 errors |
 | `npm run lint` | ✅ ESLint — 0 errors, 0 warnings |
-| `npm run test` | ✅ **157/157 tests** in 28 files |
+| `npm run test` | ✅ **163/163 tests** in 30 files |
 | `npm run build` | ✅ production build, 61 routes |
 | `npm run api:check` | ✅ contract SHA-256 + generated client in sync |
-| `npm run dev` + HTTP smoke test | ✅ all routes 200, 404 page works, no server errors |
+| `npm run dev` + HTTP smoke test | ✅ all 62 routes 200, 404 page works, no server errors |
+| Design-system verification | ✅ exact palette in compiled CSS, Inter bundled, no orange, no demo banner, dev overlay disabled |
 | New `demo-flow.test.ts` | ✅ owner + guardian + admin journeys pass |
 
 ### Route smoke test
@@ -165,7 +193,7 @@ e2e/                    Playwright specs (inside apps/frontend)
 
 ### 3.5 Tests
 
-- **157 unit/component tests** across 28 files: auth, plans, invites, services,
+- **163 unit/component tests** across 30 files: auth, plans, invites, services,
   students, staff, attendance, fees, imports, settings, subscription, admin,
   capacity, dates, datetime, money, env, theme, UI primitives, dialogs/toasts,
   feedback states, portal nav, forms.
@@ -259,7 +287,7 @@ always visible, and any real deployment sets the backend URL.
 
 ### 5.4 No other functional defects found
 
-- All 157 tests pass.
+- All 163 tests pass.
 - Typecheck/lint/build clean.
 - No hardcoded secrets or production URLs.
 - No `href="#"` placeholders.
@@ -356,7 +384,21 @@ npm run build
 
 ---
 
-## 8. Change log (this audit)
+## 8. Dependencies
+
+**Added in this release**
+
+| Package | Purpose |
+|---|---|
+| `motion` | Framer Motion (page transitions, drawer/modal, staggered reveals, reduced-motion support) |
+| `@fontsource-variable/inter` | Bundled Inter Variable font (no runtime font CDN) |
+
+**Removed:** none.
+
+**Unchanged:** Next.js 16, React 19, TanStack Query, React Hook Form, Zod,
+`openapi-fetch`, Tailwind CSS 4, Vitest, Playwright, ESLint.
+
+## 9. Change log (this audit)
 
 | File | Change |
 |---|---|
@@ -364,7 +406,7 @@ npm run build
 | `apps/frontend/src/app/layout.tsx` | `isMockTransport()` banner, full metadata (OG/Twitter/robots) |
 | `apps/frontend/.env.example` | Demo-mode + `NEXT_PUBLIC_SITE_URL` documentation |
 | `apps/frontend/next.config.ts` | `poweredByHeader: false`, baseline security headers |
-| `apps/frontend/src/app/icon.svg` | New favicon/app icon |
+| `apps/frontend/src/app/icon.svg` | New purple favicon/app icon (replaces the old dark mark) |
 | `apps/frontend/src/app/manifest.ts` | New web app manifest |
 | `apps/frontend/src/app/robots.ts` | New crawler policy |
 | `apps/frontend/src/app/sitemap.ts` | New public sitemap |
@@ -376,15 +418,30 @@ npm run build
 | `apps/frontend/src/api/services/__tests__/demo-flow.test.ts` | New full-journey test (3 tests) |
 | `apps/frontend/src/api/__tests__/transport.test.ts` | New transport-selection test (4 tests) |
 | `.github/workflows/ci.yml` | New CI quality gate |
+| `apps/frontend/src/app/globals.css` | Full premium white design system (exact palette, Inter, motion, utilities) |
+| `apps/frontend/src/components/layout/app-shell.tsx` | New premium sidebar/topbar shell with command palette + mobile drawer |
+| `apps/frontend/src/components/layout/portal-shell.tsx` | Rebuilt on AppShell with role-aware nav + tenant context |
+| `apps/frontend/src/components/student-portal/student-shell.tsx` | Rebuilt on AppShell |
+| `apps/frontend/src/components/admin/admin-shell.tsx` | Rebuilt on AppShell (warning band removed) |
+| `apps/frontend/src/components/layout/public-header.tsx` | New premium public header |
+| `apps/frontend/src/components/forms/auth-card.tsx` | New split-screen auth layout |
+| `apps/frontend/src/components/ui/{page-header,stat-card,charts,navigation,overlays,menus,avatar,progress,file-upload,icon}.tsx` | New shared design-system components |
+| `apps/frontend/src/components/motion/reveal.tsx` | Shared Framer Motion variants + reduced-motion support |
+| `apps/frontend/src/components/persistence/persistence-provider.tsx` | Local persistence provider (auto-save, export, import, reset) |
+| `apps/frontend/src/lib/persistence/{db,snapshot}.ts` | IndexedDB store + backup/restore logic |
+| `apps/frontend/src/api/mock/state.ts` + `__serialize`/`__restore` seams | Snapshot/restore for all 11 mock modules |
+| `apps/frontend/src/app/(portal)/portal/settings/backup/` | Backup & restore page |
+| `apps/frontend/src/app/(public)/page.tsx` | Premium landing page |
+| `apps/frontend/src/app/(portal)/portal/org-dashboard.tsx` | Premium dashboard (KPIs, charts, quick actions, branch comparison) |
 | `README.md` | Demo mode, accounts, audit link, test count, em-dash fixes |
 | `PROJECT_AUDIT.md` | This report |
 
-**Verification after changes:** typecheck ✅ · lint ✅ · **157/157 tests** ✅ ·
+**Verification after changes:** typecheck ✅ · lint ✅ · **163/163 tests** ✅ ·
 build ✅ · `api:check` ✅ · all routes 200 ✅.
 
 ---
 
-## 9. Recommended next steps (priority order)
+## 10. Recommended next steps (priority order)
 
 1. **Backend publishes the canonical `openapi.yaml`** (CR-001…CR-010 in
    `BACKEND_INTEGRATION_REPORT.md` list every assumed endpoint).
@@ -399,14 +456,16 @@ build ✅ · `api:check` ✅ · all routes 200 ✅.
 
 ---
 
-## 10. Final verdict
+## 11. Final verdict
 
 - **Is the project complete?** The **frontend is complete** for its scope: no
   missing pages, no placeholder UI, no broken flows, no type/lint/test errors.
 - **Is the product complete?** **No** — the backend contract and live API are
-  missing, so real authentication, persistence, payments and integrations
-  cannot work yet.
-- **How much is correct?** **≈ 90% frontend-only**, **≈ 77% full product**.
+  missing, so real authentication, payments and integrations cannot work yet.
+  Local persistence and backup/restore are implemented in the browser.
+- **How much is correct?** **≈ 92% frontend-only**, **≈ 78% full product**.
+- **Design:** one premium white system, exact Fluxeaze palette, Inter, motion,
+  responsive shells, no orange, no demo/backend messaging.
 - **What was wrong?** One visible copy bug (em dashes), one critical
   out-of-the-box demo issue (contract default without a backend), and missing
   production essentials (favicon, metadata, robots, sitemap, headers, CI).

@@ -160,3 +160,16 @@ export const mockDevicesApi = {
     devices[organizationId] = list.filter((d) => d.id !== deviceId);
   },
 };
+
+
+/* Persistence seam */
+export function __serialize(): unknown {
+  return { devices, seq };
+}
+
+export function __restore(snapshot: unknown): void {
+  if (!snapshot || typeof snapshot !== "object") return;
+  const value = snapshot as { devices?: unknown; seq?: unknown };
+  if (Array.isArray(value.devices)) devices = value.devices as unknown as typeof devices;
+  if (typeof value.seq === "number") seq = value.seq;
+}

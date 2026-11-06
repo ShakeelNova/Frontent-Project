@@ -1,17 +1,11 @@
-import { isMockTransport } from "@/api/transport";
-import { Alert } from "@/components/ui/alert";
 import type { ReactNode } from "react";
 
 /**
- * Dev-only scenario hints, rendered ONLY under the mock transport so the
- * team can exercise success/error branches deterministically. Never ships
- * to real users (mock transport must not be enabled in production).
+ * Retained as a no-op seam for call sites. The product UI never exposes
+ * demo/mock/backend messaging — the experience is presented as the real
+ * Fluxeaze product.
  */
-export function MockHint({ children }: { children: ReactNode }) {
-  if (!isMockTransport()) return null;
-  return (
-    <Alert variant="warning" title="Dev mock API — try these scenarios">
-      <div className="text-sm text-muted">{children}</div>
-    </Alert>
-  );
+export function MockHint(_props: { children?: ReactNode }) {
+  void _props;
+  return null;
 }

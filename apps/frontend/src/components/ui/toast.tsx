@@ -66,7 +66,7 @@ function ToastCard({
 
   const style = VARIANT_STYLES[item.variant];
   return (
-    <div className="pointer-events-auto flex w-full gap-3 overflow-hidden rounded-lg border border-border bg-surface shadow-md">
+    <div className="pointer-events-auto flex w-full animate-slide-up gap-3 overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
       <span aria-hidden="true" className={cn("w-1.5 shrink-0", style.bar)} />
       <div className="min-w-0 flex-1 py-3">
         <p className="text-sm font-semibold text-text">
@@ -81,7 +81,7 @@ function ToastCard({
         type="button"
         onClick={() => onDismiss(item.id)}
         aria-label={`Dismiss notification: ${item.title}`}
-        className="m-2 inline-flex h-8 w-8 shrink-0 items-center justify-center self-start rounded-md text-muted hover:bg-surface-raised hover:text-text"
+        className="m-2 inline-flex h-8 w-8 shrink-0 items-center justify-center self-start rounded-lg text-faint transition-colors hover:bg-surface-raised hover:text-text"
       >
         <svg viewBox="0 0 20 20" className="h-4 w-4" aria-hidden="true" fill="currentColor">
           <path d="M6.3 5.2 10 8.9l3.7-3.7 1.1 1.1L11.1 10l3.7 3.7-1.1 1.1L10 11.1l-3.7 3.7-1.1-1.1 3.7-3.7-3.7-3.7 1.1-1.1z" />

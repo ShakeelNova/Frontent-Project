@@ -2,7 +2,7 @@
   "name": "fluxeaze",
   "version": "0.1.0",
   "private": true,
-  "description": "Fluxeaze — multi-tenant Education Operations OS (monorepo root)",
+  "description": "Fluxeaze \u2014 multi-tenant Education Operations OS (monorepo root)",
   "workspaces": [
     "apps/*",
     "packages/*"

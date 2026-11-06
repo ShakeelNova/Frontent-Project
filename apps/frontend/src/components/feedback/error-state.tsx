@@ -39,30 +39,25 @@ export function ErrorState({
       role="alert"
       aria-label={resolvedTitle}
       className={cn(
-        "flex flex-col items-center justify-center gap-2 rounded-lg border border-error/30 bg-error-surface px-6 py-12 text-center",
+        "flex flex-col items-center justify-center gap-3 rounded-2xl border border-error/20 bg-error-surface px-6 py-14 text-center",
         className,
       )}
     >
-      <svg
-        viewBox="0 0 24 24"
-        className="h-10 w-10 text-error"
-        aria-hidden="true"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M12 8v5m0 3.5v.5M10.3 3.6 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0z" />
-      </svg>
-      <h2 className="text-h5 text-text">{resolvedTitle}</h2>
-      <p className="max-w-md text-sm text-muted">{resolvedDescription}</p>
+      <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-surface text-error shadow-sm">
+        <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M12 8v5m0 3.5v.5M10.3 3.6 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0z" />
+        </svg>
+      </span>
+      <h2 className="text-h5 font-semibold text-text">{resolvedTitle}</h2>
+      <p className="max-w-md text-sm leading-relaxed text-muted">{resolvedDescription}</p>
       {resolvedRequestId ? (
-        <p className="text-caption text-muted">
+        <p className="text-caption text-faint">
           Request ID:{" "}
           <code className="font-mono break-all">{resolvedRequestId}</code>
         </p>
       ) : null}
       {onRetry ? (
-        <div className="mt-3">
+        <div className="mt-2">
           <Button variant="primary" onClick={onRetry}>
             Try again
           </Button>

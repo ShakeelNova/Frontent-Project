@@ -1,7 +1,7 @@
+import "@fontsource-variable/inter";
 import { Providers } from "./providers";
-import { isMockTransport } from "@/api/transport";
 import { THEME_INIT_SCRIPT } from "@/components/theme/theme";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import type { ReactNode } from "react";
 
@@ -44,6 +44,12 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
@@ -53,15 +59,6 @@ export default function RootLayout({
         <Script id="theme-init" strategy="beforeInteractive">
           {THEME_INIT_SCRIPT}
         </Script>
-        {isMockTransport() ? (
-          <div
-            role="note"
-            className="bg-warning-surface px-4 py-2 text-center text-caption font-medium text-warning"
-          >
-            Demo mode — data and sign-in are simulated locally. Nothing here is
-            a real backend. Set NEXT_PUBLIC_API_BASE_URL to connect the live API.
-          </div>
-        ) : null}
         <Providers>{children}</Providers>
       </body>
     </html>

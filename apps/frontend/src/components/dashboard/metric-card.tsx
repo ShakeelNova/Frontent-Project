@@ -1,5 +1,5 @@
-import { Card, CardBody } from "@/components/ui/card";
-import Link from "next/link";
+import { Icon } from "@/components/ui/icon";
+import { StatCard } from "@/components/ui/stat-card";
 
 export interface MetricCardProps {
   label: string;
@@ -10,22 +10,13 @@ export interface MetricCardProps {
 }
 
 export function MetricCard({ label, value, hint, href }: MetricCardProps) {
-  const body = (
-    <CardBody>
-      <p className="text-sm font-medium text-muted">{label}</p>
-      <p className="mt-1 text-h3 font-bold">{value}</p>
-      {hint ? <p className="mt-1 text-sm text-muted">{hint}</p> : null}
-      {href ? (
-        <p className="mt-2 text-sm font-medium text-primary">View details →</p>
-      ) : null}
-    </CardBody>
+  return (
+    <StatCard
+      label={label}
+      value={value}
+      hint={hint}
+      href={href}
+      icon={<Icon name="activity" className="h-5 w-5" />}
+    />
   );
-  if (href) {
-    return (
-      <Link href={href} aria-label={`${label}: ${value}. View details`} className="block h-full">
-        <Card className="h-full transition-shadow hover:shadow-md">{body}</Card>
-      </Link>
-    );
-  }
-  return <Card className="h-full">{body}</Card>;
 }
